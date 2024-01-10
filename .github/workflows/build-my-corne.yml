@@ -1,0 +1,14 @@
+# Copyright 2021 Manna Harbour
+# https://github.com/manna-harbour/miryoku
+
+name: 'My Corne'
+on:
+  - workflow_dispatch
+jobs:
+  build:
+    uses: ./.github/workflows/main.yml
+    with:
+      keyboard: '["crkbd"]'
+      clipboard: '["win"]'
+      nav: '["invertedt"]'
+      alphas: '["qwerty"]'

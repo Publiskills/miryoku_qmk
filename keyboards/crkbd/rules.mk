@@ -8,16 +8,15 @@ CONSOLE_ENABLE = no         # Console for debug
 COMMAND_ENABLE = no         # Commands for debug and configuration
 NKRO_ENABLE = yes           # Enable N-Key Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
-RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
+RGBLIGHT_ENABLE = yes       # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
-RGB_MATRIX_ENABLE = no
+RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = WS2812
-LTO_ENABLE = yes
+LTO_ENABLE = yes 
+OLED_ENABLE     = yes
+OLED_DRIVER     = SSD1306
 
 # if firmware size over limit, try this option
 # LTO_ENABLE = yes
 
 DEFAULT_FOLDER = crkbd/rev1
-
-RGBLIGHT_SUPPORTED = yes
-RGB_MATRIX_SUPPORTED = yes
