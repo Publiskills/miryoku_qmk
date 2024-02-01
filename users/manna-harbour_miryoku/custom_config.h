@@ -30,7 +30,7 @@ KC_LCTL,  K20,  K21,  K22,  K23,  K24,         K25,  K26,  K27,  K28,  K29,  KC_
 #define MIRYOKU_LAYER_BASE \
 FR_Q,              FR_W,              FR_E,              FR_R,              FR_T,              FR_Y,              FR_U,              FR_I,                FR_O,              FR_P,              \
 HRML(FR_A,         FR_S,              FR_D,              FR_F),             FR_G,              FR_H,              HRMR(FR_J,         FR_K,                FR_L,              FR_SCLN),            \
-LT(U_BUTTON,FR_Z), ALGR_T(FR_X),      FR_C,              FR_V,              FR_B,              FR_N,              FR_M,              FR_COMM,             FR_DOT,            LT(U_BUTTON,FR_SLSH),\
+LT(U_BUTTON,FR_Z), ALGR_T(FR_X),      FR_C,              FR_V,              FR_B,              FR_N,              FR_M,              FR_COMM,             LT(U_FUN,FR_DOT),  LT(U_BUTTON,FR_SLSH),\
 U_NP,              U_NP,              LT(U_MEDIA,KC_ESC),LT(U_NAV,KC_SPC),  LT(U_MOUSE,KC_TAB),LT(U_SYM,KC_ENT),  LT(U_NUM,KC_BSPC), LT(U_EXTRA,KC_DEL),  U_NP,              U_NP
 
 #define MIRYOKU_LAYER_TAP \
@@ -61,7 +61,7 @@ U_NP,              U_NP,              KC_BTN3,           KC_BTN1,        KC_BTN2
 #define MIRYOKU_LAYER_MEDIA \
 TD(U_TD_BOOT),     TD(U_TD_U_TAP),    TD(U_TD_U_EXTRA),  TD(U_TD_U_BASE),   U_NA,              RGB_TOG,           RGB_MOD,           KC_VOLU,           RGB_HUI,           RGB_SAI,           \
 KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           U_NA,              U_NU,              KC_MPRV,           KC_VOLD,           KC_MNXT,           RGB_VAI,           \
-U_NA,              KC_ALGR,           TD(U_TD_U_FUN),    TD(U_TD_U_MEDIA),  U_NA,              U_NU,              U_NU,              U_NU,              U_NU,              U_NU,              \
+U_NA,              KC_ALGR,           TD(U_TD_U_EXTRA),  TD(U_TD_U_MEDIA),  U_NA,              U_NU,              U_NU,              U_NU,              U_NU,              U_NU,              \
 U_NP,              U_NP,              U_NA,              U_NA,              U_NA,              KC_MSTP,           KC_MPLY,           KC_MUTE,           U_NP,              U_NP
 
 #define MIRYOKU_LAYER_NUM \
