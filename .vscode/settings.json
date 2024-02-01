@@ -26,7 +26,18 @@
         "xhash": "c",
         "xmemory": "c",
         "xtree": "c",
-        "random": "c"
+        "random": "c",
+        "atomic": "c",
+        "deque": "c",
+        "forward_list": "c",
+        "ios": "c",
+        "list": "c",
+        "system_error": "c",
+        "vector": "c",
+        "xiosbase": "c",
+        "xstring": "c",
+        "iosfwd": "c",
+        "xlocbuf": "c"
     },
     "[markdown]": {
         "editor.trimAutoWhitespace": false,
@@ -35,5 +46,6 @@
     "python.formatting.provider": "yapf",
     "[json]": {
 	    "editor.formatOnSave": false
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

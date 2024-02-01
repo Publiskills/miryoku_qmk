@@ -8,14 +8,24 @@
 
 #include "manna-harbour_miryoku.h"
 
+enum my_keycodes {
+  FR_C_UGr = SAFE_RANGE,
+  FR_C_OCirc,
+  FR_C_CCed,
+  RID_RENAME,
+  RID_IMPL,
+  X_EXTRA
+};
+
 // Additional Features double tap guard
-
-
 enum {
     U_TD_BOOT,
 #define MIRYOKU_X(LAYER, STRING) U_TD_U_##LAYER,
     MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
+    TD_ACC_A,
+    TD_ACC_E,
+    TD_ACC_I
 };
 
 void u_td_fn_boot(tap_dance_state_t *state, void *user_data) {
@@ -33,10 +43,101 @@ void u_td_fn_boot(tap_dance_state_t *state, void *user_data) {
 MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
 
+#define WITHOUT_MODS(...) \
+  do { \
+    const uint8_t _real_mods = get_mods(); \
+    const uint8_t _weak_mods = get_weak_mods(); \
+    clear_mods(); \
+    clear_weak_mods(); \
+    { __VA_ARGS__ } \
+    set_mods(_weak_mods); \
+    set_weak_mods(_real_mods); \
+  } while (0)
+
+#define tapSpecial3Codes(k1, k2, k3) \
+    register_code(KC_LALT); \
+    tap_code(k1); \
+    tap_code(k2); \
+    tap_code(k3); \
+    unregister_code(KC_LALT);
+  
+#define tapSpecial4Codes(k1, k2, k3, k4) \
+    register_code(KC_LALT); \
+    tap_code(k1); \
+    tap_code(k2); \
+    tap_code(k3); \
+    tap_code(k4); \
+    unregister_code(KC_LALT);
+
+#define tapSpecialCodesWithShifted_4_4(l1, l2, l3, l4, u1, u2, u3, u4) \
+    if(get_mods() & MOD_MASK_SHIFT) { \
+        WITHOUT_MODS({ \
+            tapSpecial4Codes(u1, u2, u3, u4); \
+        }); \
+    } else { \
+        tapSpecial4Codes(l1, l2, l3, l4); \
+    }
+
+#define tapSpecialCodesWithShifted_3_4(l1, l2, l3, u1, u2, u3, u4) \
+    if(get_mods() & MOD_MASK_SHIFT) { \
+        WITHOUT_MODS({ \
+            tapSpecial4Codes(u1, u2, u3, u4); \
+        }); \
+    } else { \
+        tapSpecial3Codes(l1, l2, l3); \
+    }
+
+#define tapSpecialCodesWithShifted_3_3(l1, l2, l3, u1, u2, u3) \
+    if(get_mods() & MOD_MASK_SHIFT) { \
+        WITHOUT_MODS({ \
+            tapSpecial3Codes(u1, u2, u3); \
+        }); \
+    } else { \
+        tapSpecial3Codes(l1, l2, l3); \
+    }
+
+void td_acc_a(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_3, KC_KP_3, KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_2);
+    } else {
+        tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_6, KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_4);
+        reset_tap_dance(state);
+    }
+}
+
+void td_acc_e(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_3, KC_KP_0, KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_1);
+    } else if (state->count == 2) {
+        tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_3, KC_KP_8, KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_0);
+    } else if (state->count == 3) {
+        tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_4, KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_2);
+    } else if (state->count == 4) {
+        tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_5, KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_3);
+    } else {
+        WITHOUT_MODS({
+            tap_code16(FR_EURO);
+        });
+        reset_tap_dance(state);
+    }
+}
+
+void td_acc_i(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_8, KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_6);
+    } else {
+        tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_9, KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_7);
+        reset_tap_dance(state);
+    }
+}
+
 tap_dance_action_t tap_dance_actions[] = {[U_TD_BOOT] = ACTION_TAP_DANCE_FN(u_td_fn_boot),
 #define MIRYOKU_X(LAYER, STRING) [U_TD_U_##LAYER] = ACTION_TAP_DANCE_FN(u_td_fn_U_##LAYER),
                                           MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
+[TD_ACC_A] = ACTION_TAP_DANCE_FN(td_acc_a),
+[TD_ACC_E] = ACTION_TAP_DANCE_FN(td_acc_e),
+[TD_ACC_I] = ACTION_TAP_DANCE_FN(td_acc_i),
 };
 
 // keymap
@@ -49,11 +150,57 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // shift functions
 
-const key_override_t capsword_key_override = ko_make_basic(MOD_MASK_SHIFT, CW_TOGG, KC_CAPS);
+const key_override_t capsword_key_override =   ko_make_basic(MOD_MASK_SHIFT, CW_TOGG, KC_CAPS);
+const key_override_t shift_quot_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_QUOT, FR_DQUO);
+const key_override_t shift_winscln_key_override = ko_make_basic(MOD_MASK_SHIFT, LGUI_T(FR_SCLN), FR_COLN);
+const key_override_t shift_dot_key_override =  ko_make_basic(MOD_MASK_SHIFT, FR_DOT,  FR_RABK);
+const key_override_t shift_comm_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_COMM, FR_LABK);
+const key_override_t shift_lbrc_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_LBRC, FR_LCBR);
+const key_override_t shift_rbrc_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_RBRC, FR_RCBR);
+const key_override_t shift_scln_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_SCLN, FR_COLN);
+const key_override_t shift_0_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_0, FR_RPRN);
+const key_override_t shift_1_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_1, FR_EXLM);
+const key_override_t shift_2_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_2, FR_AT);
+const key_override_t shift_3_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_3, FR_HASH);
+const key_override_t shift_4_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_4, FR_DLR);
+const key_override_t shift_5_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_5, FR_PERC);
+const key_override_t shift_6_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_6, FR_CIRC);
+const key_override_t shift_7_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_7, FR_AMPR);
+const key_override_t shift_8_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_8, FR_ASTR);
+const key_override_t shift_9_key_override    = ko_make_basic(MOD_MASK_SHIFT, FR_9, FR_LPRN);
+const key_override_t shift_grv_key_override  = ko_make_basic(MOD_MASK_SHIFT, FR_GRV, FR_TILD);
+const key_override_t shift_mins_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_MINS, FR_UNDS);
+const key_override_t shift_bsls_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_BSLS, FR_PIPE);
 
-const key_override_t **key_overrides = (const key_override_t *[]){&capsword_key_override, NULL};
+const key_override_t **key_overrides = (const key_override_t *[]){
+    &capsword_key_override, 
+    &shift_quot_key_override,
+    &shift_winscln_key_override,
+    &shift_dot_key_override,
+    &shift_comm_key_override,
+    &shift_lbrc_key_override,
+    &shift_rbrc_key_override,
+    &shift_scln_key_override,
+    &shift_0_key_override,
+    &shift_1_key_override,   
+    &shift_2_key_override,  
+    &shift_3_key_override,   
+    &shift_4_key_override,   
+    &shift_5_key_override,   
+    &shift_6_key_override,   
+    &shift_7_key_override,   
+    &shift_8_key_override,   
+    &shift_9_key_override,   
+    &shift_grv_key_override, 
+    &shift_mins_key_override,
+    &shift_bsls_key_override,
+    NULL};
 
 // thumb combos
+
+enum combos {
+    EXIT_TAP
+};
 
 #if defined(MIRYOKU_KLUDGE_THUMBCOMBOS)
 const uint16_t PROGMEM thumbcombos_base_right[] = {LT(U_SYM, KC_ENT), LT(U_NUM, KC_BSPC), COMBO_END};
@@ -77,10 +224,28 @@ combo_t                key_combos[COMBO_COUNT] = {COMBO(thumbcombos_base_right, 
 #    if defined(MIRYOKU_LAYERS_FLIP)
                                    COMBO(thumbcombos_sym, KC_RPRN),
 #    else
-                                   COMBO(thumbcombos_sym, KC_LPRN),
+                                   COMBO(thumbcombos_sym, KC_LPRN),e
 #    endif
                                                   COMBO(thumbcombos_fun, KC_APP)};
 #endif
+
+// my combos
+
+const uint16_t PROGMEM exittap_combo[] = {KC_ESC, KC_DEL, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+  [EXIT_TAP] = COMBO(exittap_combo, DF(U_BASE))
+};
+
+bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+    switch (combo_index) {
+        case EXIT_TAP:
+            if (!layer_state_is(U_TAP)) {
+                return false;
+            }
+    }
+    return true;
+}
 
 void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val) {
     HSV hsv = {hue, sat, val};
@@ -92,12 +257,15 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val) {
 }
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    switch (get_highest_layer(layer_state)) {
+    switch (get_highest_layer(layer_state|default_layer_state)) {
         case U_BASE:
             rgb_matrix_layer_helper(HSV_GREEN);
             break;
         case U_NAV:
             rgb_matrix_layer_helper(HSV_PURPLE);
+            break;
+        case U_TAP:
+            rgb_matrix_layer_helper(HSV_RED);
             break;
         case U_BUTTON:
             rgb_matrix_layer_helper(HSV_BLUE);
@@ -117,6 +285,12 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         case U_EXTRA:
             rgb_matrix_layer_helper(HSV_WHITE);
             break;
+        case U_ACC:
+            rgb_matrix_layer_helper(HSV_PINK);
+            break;
+        case U_MOUSE:
+            rgb_matrix_layer_helper(HSV_CHARTREUSE);
+            break;
         default:
             rgb_matrix_layer_helper(HSV_CHARTREUSE);
             break;
@@ -124,6 +298,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return false;
 }
 
+/* 32 * 32 logo */
 static void render_logo(void) {
     static const char PROGMEM hell_logo[] = {0x00, 0x80, 0xc0, 0xc0, 0x60, 0x60, 0x30, 0x30, 0x18, 0x1c, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x80, 0xe0, 0x78, 0x1e, 0x06, 0x00, 0x0c, 0x1c, 0x18, 0x30, 0x30, 0x60, 0x60, 0xc0, 0xc0, 0x80, 0x00, 0x01, 0x03, 0x07, 0x06, 0x0c, 0x0c, 0x18, 0x18, 0x30, 0x70, 0x60, 0x00, 0xc0, 0xf0, 0x3c, 0x0f, 0x03, 0x00, 0x00, 0x00, 0x00, 0x60, 0x70, 0x30, 0x18, 0x18, 0x0c, 0x0c, 0x06, 0x07, 0x03, 0x01, 0x00, 0xf8, 0xf8, 0x80, 0x80, 0x80, 0xf8, 0xf8, 0x00, 0x80, 0xc0, 0xc0, 0x40, 0xc0, 0xc0, 0x80, 0x00, 0xf8, 0xf8, 0x00, 0xf8, 0xf8, 0x00, 0x08, 0x38, 0x08, 0x00, 0x38, 0x08, 0x30, 0x08, 0x38, 0x00, 0x1f, 0x1f, 0x01, 0x01, 0x01, 0x1f, 0x1f, 0x00, 0x0f, 0x1f, 0x1a, 0x12, 0x1a, 0x1b, 0x0b, 0x00, 0x1f, 0x1f, 0x00, 0x1f, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
@@ -266,11 +441,6 @@ static void render_luna(int LUNA_X, int LUNA_Y) {
     }
 }
 
-static uint8_t get_current_wpm(void)
-{
-    return 60;
-}
-
 static void print_logo_narrow(void) {
     render_logo();
 
@@ -298,15 +468,18 @@ static void print_status_narrow(void) {
 
     oled_set_cursor(0, 6);
 
-    switch (get_highest_layer(layer_state)) {
+    switch (get_highest_layer(layer_state|default_layer_state)) {
         case U_BASE:
             oled_write("Base ", false);
             break;
         case U_NAV:
-            oled_write("Nav  ", false);
+            oled_write("Navig", false);
+            break;
+        case U_TAP:
+            oled_write("Tap  ", false);
             break;
         case U_BUTTON:
-            oled_write("Butn ", false);
+            oled_write("Btn  ", false);
             break;
         case U_MEDIA:
             oled_write("Media", false);
@@ -318,13 +491,19 @@ static void print_status_narrow(void) {
             oled_write("Symb ", false);
             break;
         case U_FUN:
-            oled_write("Funct", false);
+            oled_write("Func ", false);
             break;
         case U_EXTRA:
             oled_write("Extra", false);
             break;
+        case U_ACC:
+            oled_write("Acc  ", false);
+            break;
+        case U_MOUSE:
+            oled_write("Mouse", false);
+            break;
         default:
-            oled_write("Undef ", false);
+            oled_write("Undef", false);
             break;
     }
 
@@ -361,13 +540,57 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LT(U_BUTTON, FR_SLSH):
             if (record->tap.count && record->event.pressed) {
-                tap_code16(FR_SLSH); // Send FR_SLSH on tap
+                if(get_mods() & MOD_MASK_SHIFT) {
+                    tap_code16(FR_QUES); // Send FR_QUES on tap when shifted
+                }
+                else {
+                    tap_code16(FR_SLSH); // Send FR_SLSH on tap
+                }
                 return false;        // Return false to ignore further processing of key
+            }
+            break;
+        case FR_C_UGr:
+            if (record->event.pressed) {
+                tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_5, KC_KP_1, KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_7);
+                return false; 
+            }
+            break;
+        case FR_C_OCirc:
+            if (record->event.pressed) {
+                tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_4, KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_2);
+                return false; 
+            }
+            break;
+        case FR_C_CCed:
+            if (record->event.pressed) {
+                tapSpecialCodesWithShifted_3_3(KC_KP_1, KC_KP_3, KC_KP_5, KC_KP_1, KC_KP_2, KC_KP_8);
+                return false; 
+            }
+            break;
+        case RID_RENAME:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("rr"));
+                return false; 
+            }
+            break;
+        case RID_IMPL:
+            if (record->event.pressed) {
+                tap_code16(LCTL(KC_F12));
+                return false; 
+            }
+            break;
+        case X_EXTRA:
+            if (record->event.pressed) {
+                tap_code16(LSFT(FR_E));
+                tap_code(FR_X);
+                tap_code(FR_T);
+                tap_code(FR_R);
+                tap_code(FR_A);
+                return false; 
             }
             break;
 
             /* KEYBOARD PET STATUS START */
-
         case KC_LCTL:
         case KC_RCTL:
             if (record->event.pressed) {
@@ -382,6 +605,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 showedJump = false;
             } else {
                 isJumping = false;
+            }
+            break;
+        case LT(U_NAV,KC_SPC):
+            if (record->tap.count) {
+                if (record->event.pressed) {
+                    isJumping  = true;
+                    showedJump = false;
+                } else {
+                    isJumping = false;
+                }
             }
             break;
 
