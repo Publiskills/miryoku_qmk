@@ -152,6 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const key_override_t capsword_key_override =   ko_make_basic(MOD_MASK_SHIFT, CW_TOGG, KC_CAPS);
 const key_override_t shift_quot_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_QUOT, FR_DQUO);
+const key_override_t shift_ltquot_key_override = ko_make_basic(MOD_MASK_SHIFT, LT(U_ACC,FR_QUOT), FR_DQUO);
 const key_override_t shift_winscln_key_override = ko_make_basic(MOD_MASK_SHIFT, LGUI_T(FR_SCLN), FR_COLN);
 const key_override_t shift_dot_key_override =  ko_make_basic(MOD_MASK_SHIFT, FR_DOT,  FR_RABK);
 const key_override_t shift_comm_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_COMM, FR_LABK);
@@ -175,6 +176,7 @@ const key_override_t shift_bsls_key_override = ko_make_basic(MOD_MASK_SHIFT, FR_
 const key_override_t **key_overrides = (const key_override_t *[]){
     &capsword_key_override, 
     &shift_quot_key_override,
+    &shift_ltquot_key_override,
     &shift_winscln_key_override,
     &shift_dot_key_override,
     &shift_comm_key_override,
