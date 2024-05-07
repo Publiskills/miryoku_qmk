@@ -827,12 +827,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;        // Return false to ignore further processing of key
             }
             break;
-        case FR_C_UGr:
-            if (record->event.pressed) {
-                tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_5, KC_KP_1, KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_7);
-                return false; 
-            }
-            break;
         case FR_C_OCirc:
             if (record->event.pressed) {
                 tapSpecialCodesWithShifted_4_4(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_4, KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_2);
