@@ -89,7 +89,7 @@ U_NP,              U_NP,              U_NA,              U_NA,              U_NA
 
 
 #define MIRYOKU_LAYER_ACC \
-U_NU,             U_NU,             TD(TD_ACC_E),     U_NU,             U_NU,                   U_NU,              FR_C_UGr,         TD(TD_ACC_I),     FR_C_OCirc,       U_NU,                \
+U_NU,             U_NU,             TD(TD_ACC_E),     U_NU,             U_NU,                   U_NU,              TD(TD_ACC_U),     TD(TD_ACC_I),     FR_C_OCirc,       U_NU,                \
 TD(TD_ACC_A),     U_NU,             U_NU,             U_NU,             U_NU,                   U_NU,              U_NU,             U_NU,             U_NU,             U_NU,                \
 U_NU,             U_NU,             FR_C_CCed,        U_NU,             U_NU,                   U_NU,              U_NU,             U_NU,             U_NU,             U_NU,                \
 U_NP,             U_NP,             KC_ESC,           KC_SPC,           KC_TAB,                 KC_ENT,            KC_BSPC,          KC_DEL,           U_NP,             U_NP

@@ -8,9 +8,8 @@
 
 #include "manna-harbour_miryoku.h"
 
-enum my_keycodes {
-  FR_C_UGr = SAFE_RANGE,
-  FR_C_OCirc,
+enum my_keycodes {  
+  FR_C_OCirc = SAFE_RANGE,
   FR_C_CCed,
   RID_RENAME,
   RID_IMPL,
@@ -25,7 +24,8 @@ enum {
 #undef MIRYOKU_X
     TD_ACC_A,
     TD_ACC_E,
-    TD_ACC_I
+    TD_ACC_I,
+    TD_ACC_U
 };
 
 void u_td_fn_boot(tap_dance_state_t *state, void *user_data) {
@@ -131,6 +131,15 @@ void td_acc_i(tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void td_acc_u(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_5, KC_KP_1, KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_7);
+    } else {
+        tapSpecialCodesWithShifted_3_4(KC_KP_1, KC_KP_5, KC_KP_0, KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_9);
+        reset_tap_dance(state); 
+    }
+}
+
 tap_dance_action_t tap_dance_actions[] = {[U_TD_BOOT] = ACTION_TAP_DANCE_FN(u_td_fn_boot),
 #define MIRYOKU_X(LAYER, STRING) [U_TD_U_##LAYER] = ACTION_TAP_DANCE_FN(u_td_fn_U_##LAYER),
                                           MIRYOKU_LAYER_LIST
@@ -138,6 +147,7 @@ tap_dance_action_t tap_dance_actions[] = {[U_TD_BOOT] = ACTION_TAP_DANCE_FN(u_td
 [TD_ACC_A] = ACTION_TAP_DANCE_FN(td_acc_a),
 [TD_ACC_E] = ACTION_TAP_DANCE_FN(td_acc_e),
 [TD_ACC_I] = ACTION_TAP_DANCE_FN(td_acc_i),
+[TD_ACC_U] = ACTION_TAP_DANCE_FN(td_acc_u),
 };
 
 // keymap
